@@ -1,0 +1,14 @@
+@keyframes textSlide {
+    0% { transform: translateY(0); }
+    33% { transform: translateY(-40%); }
+    66% { transform: translateY(-80%); }
+    100% { transform: translateY(-10%); }
+  }
+  
+  .animate-text-slide {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: textSlide 10s infinite ease-in-out;
+  }
+  

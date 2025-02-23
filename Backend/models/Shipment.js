@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ShipmentSchema = new mongoose.Schema({
     userId : {type : mongoose.Schema.Types.ObjectId,ref : 'User',required : true},
     shipmentId : {type : String, required : true,unique : true},
-    containerId : {type : String, required : true},
+    containerId : {type : String,unique:true, required : true},
     route : [{
         lat: {type : Number, required : true},
         lng: {type : Number, required : true},

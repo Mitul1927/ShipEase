@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 import AdminLogin from '../pages/AdminLogin/AdminLogin';
 import Login from "../pages/Login/login";
 import SignUp from "../pages/Signup/Signup";
+import AddShipment from "../pages/AddShipment/AddShipment2";
 
 const router = createBrowserRouter([
     {
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
                 element : <div>Dashboard</div>
             },
             {
-                path : "/addShipment"
+                path : "/addShipment",
+                element : <AddShipment/>
             }
         ]
     },{

@@ -1,7 +1,13 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
+
 const joi = require('joi');
+
+const multer = require('multer');
+const storage = multer.memoryStorage();
+module.exports.upload = multer({ storage });
+
 module.exports.authenticateUser = (req, res, next) => {
     let token = req.header('Authorization');
     if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
@@ -47,7 +53,8 @@ module.exports.shipmentSchema = joi.object({
 });
 module.exports.userSchema = joi.object({
     email: joi.string().email().required(),
-    password: joi.string().min(6).required()
+    password: joi.string().min(6).required(),
+    username : joi.string()
 });
 // module.exports.getCoordinates = async(city)=>{
 //     try{

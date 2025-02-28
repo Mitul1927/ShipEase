@@ -8,9 +8,11 @@ import "leaflet/dist/leaflet.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const dispatch = useDispatch();
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
+  const token = localStorage.getItem('token');
+  let isAuthenticated = false;
 
   const handleAddShipment = () => {
     if (isAuthenticated) {
@@ -23,17 +25,9 @@ const Home = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token);
-      dispatch(
-        login({
-          email: decoded.email,
-          id: decoded.id,
-          token: decoded.token,
-          role: decoded.role,
-        })
-      );
+      isAuthenticated = true;
     }
-  }, [dispatch]);
+  }, []);
 
   const shipments = [
     { id: 1, location: [28.6139, 77.209], name: "New Delhi, India" },

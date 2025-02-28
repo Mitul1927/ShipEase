@@ -3,19 +3,86 @@ import axios from "axios";
 import {
   MapContainer,
   TileLayer,
-  useMapEvents,
+  useMap,
   Marker,
   Polyline,
+  useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { OpenStreetMapProvider } from "leaflet-geosearch";
 import L from "leaflet";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 const MapClickHandler = ({ onClick }) => {
   useMapEvents({
     click: onClick,
   });
   return null;
+};
+
+
+const UpdateMapCenter = ({ mapCenter }) => {
+  const map = useMap();
+  map.setView(mapCenter, 10);
+  return null;
+};
+
+const SearchLocation = ({
+  searchQuery,
+  setSearchQuery,
+  searchResults,
+  setSearchResults,
+  setMapCenter,
+}) => {
+  const handleSearch = async () => {
+    if (!searchQuery) return;
+    try {
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${searchQuery}`
+      );
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  };
+
+  const handleSelectLocation = (lat, lon) => {
+    setMapCenter([lat, lon]); 
+    setSearchResults([]);
+    setSearchQuery("");
+  };
+
+  return (
+    <div className="relative w-full">
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full p-2 md:p-3 rounded bg-gray-800 text-white"
+        placeholder="Enter location"
+      />
+      <button
+        type="button"
+        onClick={handleSearch}
+        className="absolute right-2 top-2 bg-[#4EA5D9] text-white px-3 py-1 rounded"
+      >
+        Search
+      </button>
+      {searchResults.length > 0 && (
+        <ul className="absolute bg-white text-black w-full mt-1 rounded shadow-lg max-h-40 overflow-y-auto">
+          {searchResults.map((result, index) => (
+            <li
+              key={index}
+              className="p-2 cursor-pointer hover:bg-gray-200"
+              onClick={() => handleSelectLocation(result.lat, result.lon)}
+            >
+              {result.display_name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 };
 
 const AddShipment = () => {
@@ -26,6 +93,7 @@ const AddShipment = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [mapCenter, setMapCenter] = useState([20, 78]);
 
   const customMarkerIcon = new L.Icon({
     iconUrl:
@@ -52,22 +120,15 @@ const AddShipment = () => {
     setRoute([]);
     setCurrentLocation(null);
   };
+  const token = localStorage.getItem('token');
+  const decodedToken = jwtDecode(token);
 
-  const handleSearch = async () => {
-    const provider = new OpenStreetMapProvider();
-    const results = await provider.search({ query: searchQuery });
-    setSearchResults(results);
-  };
-
-  const handleSelectLocation = (lat, lng) => {
-    setRoute([...route, { lat, lng }]);
-    setSearchResults([]);
-  };
+  const userId = decodedToken.id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const shipmentData = {
-      userId: "USER_ID_HERE", // Replace with actual user ID
+      userId: userId,
       shipmentId: `SHIP-${Date.now()}`,
       containerId,
       route,
@@ -75,8 +136,12 @@ const AddShipment = () => {
       eta,
       status,
     };
+    console.log(shipmentData);
     try {
-      await axios.post("http://localhost:3000/shipment", shipmentData);
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/shipment`,
+        shipmentData
+      );
       alert("Shipment added successfully");
     } catch (err) {
       console.error("Error adding shipment", err);
@@ -90,8 +155,10 @@ const AddShipment = () => {
       </h2>
       <p className="mb-2 md:mb-4 text-gray-300 text-center max-w-lg">
         Click on the map to mark your shipment route. The first click sets the
-        starting point, and each subsequent click adds a waypoint.
+        starting point, and each subsequent click adds a waypoint. Click a
+        marker to remove it.
       </p>
+
       <div className="bg-[#224870] p-4 md:p-8 rounded-lg shadow-lg w-full max-w-3xl relative">
         <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
           <div>
@@ -115,6 +182,7 @@ const AddShipment = () => {
               value={eta}
               onChange={(e) => setEta(e.target.value)}
               className="w-full p-2 md:p-3 rounded bg-gray-800 text-white"
+              min={new Date().toISOString().slice(0, 16)} 
               required
             />
           </div>
@@ -133,33 +201,23 @@ const AddShipment = () => {
               <option>Cancelled</option>
             </select>
           </div>
-          <div className=" relative flex justify-between">
-            <div>
-              <label className="block mb-2 font-semibold">
-                Select Route on Map
-              </label>
-              <p className=" text-gray-300 text-sm mb-2 hidden md:block ">
-                Click on the map to add route points. Click on a marker to
-                remove it.
-              </p>
-            </div>
-            <div>
-              <button
-                onClick={handleRemoveAllMarkers}
-                type="button"
-                className="cursor-pointer absolute md:top-5 right-2 bg-red-500  text-white px-3 py-1 rounded z-10"
-              >
-                Clear All
-              </button>
-            </div>
-          </div>
-          <div className="relative h-64 md:h-96 rounded overflow-hidden mt-4">
+
+          <SearchLocation
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
+            setMapCenter={setMapCenter}
+          />
+
+          <div className="block h-64 md:h-96 rounded overflow-hidden mt-32">
             <MapContainer
-              center={[20, 78]}
+              center={mapCenter}
               zoom={5}
               className="h-full w-full rounded"
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <UpdateMapCenter mapCenter={mapCenter} />
               <MapClickHandler onClick={handleMapClick} />
               {route.map((point, index) => (
                 <Marker
@@ -177,9 +235,18 @@ const AddShipment = () => {
               )}
             </MapContainer>
           </div>
+
+          <button
+            type="button"
+            onClick={handleRemoveAllMarkers}
+            className="w-full bg-red-500 p-2 md:p-3 rounded text-white font-bold mt-2 md:mt-4"
+          >
+            Clear All Markers
+          </button>
+
           <button
             type="submit"
-            className="w-full bg-[#44CFCB] p-2 md:p-3 rounded text-black font-bold mt-2 md:mt-4"
+            className="w-full bg-[#44CFCB] p-2 md:p-3 rounded text-black font-bold"
           >
             Add Shipment
           </button>

@@ -39,7 +39,7 @@ const Header = () => {
         <h1 className="text-2xl font-bold">ShipEase</h1>
       </div>
 
-      <div className="hidden md:block overflow-hidden w-64 h-6 relative">
+      <div className="hidden lg:block overflow-hidden w-64 h-6 relative">
         <div className="animate-text-slide text-sm text-[#44CFCB] font-semibold absolute top-2">
           <span>Track your shipments with ease 🚛</span>
           <span>Secure and Fast Cargo Services ✈️</span>
@@ -48,15 +48,14 @@ const Header = () => {
       </div>
 
       {image ? (
-        <img src={image} alt="User" className="h-10 w-10 rounded-full border-2 border-[#4EA5D9] md:hidden cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
+        <img src={image} alt="User" className="h-10 w-10 rounded-full border-2 block border-[#4EA5D9] lg:hidden cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
       ) : (
         <button className="md:hidden text-[#4EA5D9]" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
       )}
 
-      {/* Navigation Menu */}
-      <nav className={`absolute z-10 md:relative top-16 md:top-auto left-0 w-full md:w-auto bg-[#122C34] md:bg-transparent flex flex-col md:flex-row items-center md:space-x-4 space-y-4 md:space-y-0 p-4 md:p-0 ${menuOpen ? "block" : "hidden md:flex"}`}>
+      <nav className={`absolute z-10 lg:relative top-16 lg:top-auto left-0 w-full lg:w-auto bg-[#122C34] lg:bg-transparent flex flex-col lg:flex-row items-center lg:space-x-4 space-y-4 lg:space-y-0 p-4 lg:p-0 ${menuOpen ? "block" : "hidden lg:flex"}`}>
         <Link to="/about" onClick={()=>(setMenuOpen(false))} className="hover:text-[#44CFCB]">About Us</Link>
         <Link to="/allShipments" onClick={()=>(setMenuOpen(false))} className="hover:text-[#44CFCB]">All Shipments</Link>
 

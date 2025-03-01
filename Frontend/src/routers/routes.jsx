@@ -7,6 +7,7 @@ import SignUp from "../pages/Signup/Signup";
 import AddShipment from "../pages/AddShipment/AddShipment2";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import UserInfo from "../pages/Dashboard/userInfo/UserInfo";
+import AllShipments from "../pages/AllShipments/AllShipments";
 
 const router = createBrowserRouter([
     {
@@ -18,8 +19,8 @@ const router = createBrowserRouter([
                 element: <Home/>
             },
             {
-                path : "/allshipments",
-                element : <div>all shipments</div>
+                path : "/allShipments",
+                element : <AllShipments/>
             },
             {
                 path : "/shipment/:id",
@@ -28,10 +29,6 @@ const router = createBrowserRouter([
             {
                 path : "/about",
                 element: <div>About us</div>
-            },
-            {
-                path : "/shipments",
-                element : <div>All Shipments</div>
             },
             {
                 path : "/addShipment",

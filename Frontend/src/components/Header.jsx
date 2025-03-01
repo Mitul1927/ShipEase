@@ -58,10 +58,11 @@ const Header = () => {
       {/* Navigation Menu */}
       <nav className={`absolute z-10 md:relative top-16 md:top-auto left-0 w-full md:w-auto bg-[#122C34] md:bg-transparent flex flex-col md:flex-row items-center md:space-x-4 space-y-4 md:space-y-0 p-4 md:p-0 ${menuOpen ? "block" : "hidden md:flex"}`}>
         <Link to="/about" onClick={()=>(setMenuOpen(false))} className="hover:text-[#44CFCB]">About Us</Link>
-        <Link to="/shipments" onClick={()=>(setMenuOpen(false))} className="hover:text-[#44CFCB]">All Shipments</Link>
+        <Link to="/allShipments" onClick={()=>(setMenuOpen(false))} className="hover:text-[#44CFCB]">All Shipments</Link>
 
         {isAuthenticated ? (
           <>
+          <Link onClick={()=>(setMenuOpen(false))} to="/addShipment" className="hover:text-[#44CFCB]">Add Shipment</Link>
             <Link onClick={()=>(setMenuOpen(false))} to="/dashboard" className="hover:text-[#44CFCB]">Dashboard</Link>
 
             <div className="flex hover:bg-[#4EA5D9] cursor-pointer items-center bg-[#2A4494] px-3 py-2 rounded-lg space-x-3 shadow-md">

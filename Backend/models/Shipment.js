@@ -7,11 +7,14 @@ const ShipmentSchema = new mongoose.Schema({
     route : [{
         lat: {type : Number, required : true},
         lng: {type : Number, required : true},
+        placeName : {type:String,required : true},
     }],
     currentLocation : {
         lat : {type: Number, required : true},
-        lng:{ type: Number,required:true}
+        lng:{ type: Number,required:true},
+        placeName : {type:String,required : true},
     },
+    owner: {type: String,required : true},
     eta : {type : Date,required : true},
     status : {type : String, enum : ['Pending', 'In Transit', 'Delivered', 'Cancelled'], default : 'Pending'}
 },{ timestamps: true });

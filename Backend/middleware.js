@@ -26,7 +26,7 @@ module.exports.authenticateAdmin = (req, res, next) => {
 
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-        if (!verified.isAdmin) return res.status(403).json({ error: 'Forbidden' });
+        if (!verified.role==='admin') return res.status(403).json({ error: 'Forbidden' });
 
         req.user = verified;
         next();
@@ -41,12 +41,14 @@ module.exports.shipmentSchema = joi.object({
     route: joi.array().items(
         joi.object({
             lat: joi.number().required(),
-            lng: joi.number().required()
+            lng: joi.number().required(),
+            placeName : joi.string().required(),
         })
     ).required(),
     currentLocation: joi.object({
         lat: joi.number().required(),
-        lng: joi.number().required()
+        lng: joi.number().required(),
+        placeName : joi.string().required(),
     }).required(),
     eta: joi.date().required(),
     status: joi.string().valid('Pending', 'In Transit', 'Delivered', 'Cancelled').required()

@@ -25,7 +25,7 @@ dotenv.config();
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
-app.use('/',shipmentRoutes);
+app.use('/shipment',shipmentRoutes);
 app.use('/admin',adminRoutes);
 app.use('/user',userRoutes);
 app.use('/auth',authRoutes);

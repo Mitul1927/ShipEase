@@ -10,6 +10,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const MapClickHandler = ({ onClick }) => {
@@ -93,6 +94,8 @@ const AddShipment = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [mapCenter, setMapCenter] = useState([20, 78]);
+  const [error,setError] = useState(null);
+  const Navigate = useNavigate();
 
   const customMarkerIcon = new L.Icon({
     iconUrl:
@@ -101,12 +104,24 @@ const AddShipment = () => {
     iconAnchor: [12, 41],
   });
 
-  const handleMapClick = (e) => {
+  const handleMapClick = async (e) => {
     const { lat, lng } = e.latlng;
-    if (!currentLocation) {
-      setCurrentLocation({ lat, lng });
+    try {
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      );
+      const placeName = response.data.display_name || "Unknown Location";
+  
+      const newPoint = { lat, lng, placeName };
+  
+      if (!currentLocation) {
+        setCurrentLocation(newPoint);
+      }
+  
+      setRoute([...route, newPoint]);
+    } catch (error) {
+      console.error("Error fetching place name:", error);
     }
-    setRoute([...route, { lat, lng }]);
   };
 
   const handleRemoveMarker = (index) => {
@@ -125,25 +140,27 @@ const AddShipment = () => {
   const userId = decodedToken.id;
 
   const handleSubmit = async (e) => {
+    setError("");
     e.preventDefault();
     const shipmentData = {
       userId: userId,
-      shipmentId: `SHIP-${Date.now()}`,
       containerId,
       route,
       currentLocation: currentLocation || route[0],
       eta,
       status,
     };
-    console.log(shipmentData);
+    // console.log(shipmentData);
     try {
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/shipment`,
-        shipmentData
+        `${import.meta.env.VITE_BACKEND_URL}/shipment/addShipment`,
+        shipmentData,{headers : {Authorization : token}}
       );
       alert("Shipment added successfully");
+      Navigate('/allShipments');
     } catch (err) {
       console.error("Error adding shipment", err);
+      setError(err.response.data.msg);
     }
   };
 
@@ -234,7 +251,7 @@ const AddShipment = () => {
               )}
             </MapContainer>
           </div>
-
+          {error && <p className="text-red-500 text-lg items-center mb-2">{error}</p>}
           <button
             type="button"
             onClick={handleRemoveAllMarkers}

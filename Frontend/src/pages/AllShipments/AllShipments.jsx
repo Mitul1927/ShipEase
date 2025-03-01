@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Bookmark, MapPin, Calendar, User } from "lucide-react";
+import { Bookmark, BookmarkCheck, MapPin, Calendar, User } from "lucide-react";
 
 const AllShipments = () => {
   const [shipments, setShipments] = useState([]);
+  const [bookmarked, setBookmarked] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [sortByEta, setSortByEta] = useState(false);
 
@@ -21,6 +22,18 @@ const AllShipments = () => {
     };
     fetchShipments();
   }, []);
+
+  const toggleBookmark = (id) => {
+    setBookmarked((prev) => {
+      const newBookmarks = new Set(prev);
+      if (newBookmarks.has(id)) {
+        newBookmarks.delete(id);
+      } else {
+        newBookmarks.add(id);
+      }
+      return newBookmarks;
+    });
+  };
 
   const filteredShipments = shipments
     .filter((shipment) =>
@@ -52,7 +65,7 @@ const AllShipments = () => {
         {filteredShipments.map((shipment) => (
           <Link
             to={`/shipment/${shipment._id}`}
-            key={shipment.shipmentId}
+            key={shipment._id}
             className="bg-[#224870] p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer"
           >
             <div className="mb-2 flex items-center gap-2 text-lg font-semibold">
@@ -84,8 +97,20 @@ const AllShipments = () => {
                 {shipment.status}
               </span>
             </div>
-            <button className="flex items-center gap-2 text-[#44CFCB] hover:text-[#4EA5D9]">
-              <Bookmark /> Bookmark
+            <button
+              className="cursor-pointer flex items-center gap-2 text-[#44CFCB] hover:text-[#4EA5D9]"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleBookmark(shipment._id);
+              }}
+            >
+              {bookmarked.has(shipment._id) ? (
+                <BookmarkCheck className="text-yellow-400" />
+              ) : (
+                <Bookmark />
+              )}
+              {bookmarked.has(shipment._id) ? "Bookmarked" : "Bookmark"}
             </button>
           </Link>
         ))}

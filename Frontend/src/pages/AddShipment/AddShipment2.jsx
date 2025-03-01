@@ -113,6 +113,7 @@ const AddShipment = () => {
       const placeName = response.data.display_name || "Unknown Location";
   
       const newPoint = { lat, lng, placeName };
+      setMapCenter([lat,lng]);
   
       if (!currentLocation) {
         setCurrentLocation(newPoint);

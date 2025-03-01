@@ -5,6 +5,9 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { login } from "../../reduxStore/authSlice2";
 import { jwtDecode } from "jwt-decode";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,7 +15,7 @@ const Home = () => {
   // const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const token = localStorage.getItem('token');
-  let isAuthenticated = false;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleAddShipment = () => {
     if (isAuthenticated) {
@@ -25,7 +28,7 @@ const Home = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      isAuthenticated = true;
+      setIsAuthenticated(true);
     }
   }, []);
 
@@ -34,7 +37,14 @@ const Home = () => {
     { id: 2, location: [40.7128, -74.006], name: "New York, USA" },
     { id: 3, location: [51.5074, -0.1278], name: "London, UK" },
   ];
-
+  const customIcon = new L.Icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
   return (
     <div className="min-h-screen w-full bg-[#122C34] flex flex-col md:flex-row items-center justify-center px-6 md:px-12 py-10 space-y-6 md:space-y-0 md:space-x-12">
       <div className="text-white w-full md:w-1/2 text-center md:text-left">
@@ -55,7 +65,7 @@ const Home = () => {
         <MapContainer center={[20, 0]} zoom={2} className="w-full h-full">
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {shipments.map((shipment) => (
-            <Marker key={shipment.id} position={shipment.location}>
+            <Marker key={shipment.id} position={shipment.location} icon={customIcon}>
               <Popup>{shipment.name}</Popup>
             </Marker>
           ))}

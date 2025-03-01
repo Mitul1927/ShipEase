@@ -10,7 +10,6 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 
 const MapClickHandler = ({ onClick }) => {

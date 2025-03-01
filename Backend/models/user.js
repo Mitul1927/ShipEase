@@ -2,16 +2,18 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    email : {type: String,required : true, unique : true},
-    username : {type:String,required : true},
-    password : {type: String},
-    role : {type : String, enum:['user','admin'], default:'user'},
-    image : {type : String,default:null},
+    email: { type: String, required: true, unique: true },
+    username: { type: String, required: true },
+    password: { type: String },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    image: { type: String, default: null },
     googleId: { type: String },
-},{timestamps:true});
+    shipments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shipment' }],
+    bookmarkedShipments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shipment' }], 
+}, { timestamps: true });
 
-userSchema.pre('save',async function(next){
-    if(!this.isModified('password') || !this.password){
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password') || !this.password) {
         return next();
     }
     try {
@@ -22,4 +24,5 @@ userSchema.pre('save',async function(next){
         next(err);
     }
 });
-module.exports = mongoose.model('User',userSchema);
+
+module.exports = mongoose.model('User', userSchema);

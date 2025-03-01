@@ -12,7 +12,7 @@ const cloudinary = require('./utils/cloudinaryConfig');
 const cookieParser = require('cookie-parser');
 const app = express();
 const port = process.env.port || 5000;
-app.use(cors({ origin: "http://localhost:5173",credentials:true }));
+app.use(cors({ origin: "process.env.FRONTEND_URL",credentials:true }));
 app.use(express.json());
 
 app.use(cookieParser());

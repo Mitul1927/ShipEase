@@ -8,6 +8,7 @@ import AddShipment from "../pages/AddShipment/AddShipment2";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import UserInfo from "../pages/Dashboard/userInfo/UserInfo";
 import AllShipments from "../pages/AllShipments/AllShipments";
+import MyShipments from "../pages/Dashboard/myShipments/MyShipments";
 
 const router = createBrowserRouter([
     {
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path : '/dashboard/shipments',
-                        element: <div>All Shipments</div>
+                        element: <MyShipments/>
                     },
                     {
                         path:'/dashboard/visitors',

@@ -20,7 +20,6 @@ const MapClickHandler = ({ onClick }) => {
   return null;
 };
 
-
 const UpdateMapCenter = ({ mapCenter }) => {
   const map = useMap();
   map.setView(mapCenter, 10);
@@ -47,7 +46,7 @@ const SearchLocation = ({
   };
 
   const handleSelectLocation = (lat, lon) => {
-    setMapCenter([lat, lon]); 
+    setMapCenter([lat, lon]);
     setSearchResults([]);
     setSearchQuery("");
   };
@@ -64,7 +63,7 @@ const SearchLocation = ({
       <button
         type="button"
         onClick={handleSearch}
-        className="absolute right-2 top-2 bg-[#4EA5D9] text-white px-3 py-1 rounded"
+        className="absolute right-2 top-1 md:top-2 bg-[#4EA5D9] text-white px-3 py-1 rounded"
       >
         Search
       </button>
@@ -94,7 +93,7 @@ const AddShipment = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [mapCenter, setMapCenter] = useState([20, 78]);
-  const [error,setError] = useState(null);
+  const [error, setError] = useState(null);
   const Navigate = useNavigate();
 
   const customMarkerIcon = new L.Icon({
@@ -104,16 +103,49 @@ const AddShipment = () => {
     iconAnchor: [12, 41],
   });
 
+  // const handleMapClick = async (e) => {
+  //   const { lat, lng } = e.latlng;
+  //   try {
+  //     const response = await axios.get(
+  //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+  //     );
+  //     const placeName = response.data.display_name || "Unknown Location";
+
+  //     const newPoint = { lat, lng, placeName };
+  //     setMapCenter([lat, lng]);
+
+  //     if (!currentLocation) {
+  //       setCurrentLocation(newPoint);
+  //     }
+
+  //     setRoute([...route, newPoint]);
+  //   } catch (error) {
+  //     console.error("Error fetching place name:", error);
+  //   }
+  // };
   const handleMapClick = async (e) => {
     const { lat, lng } = e.latlng;
+  
     try {
       const response = await axios.get(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
       );
+      if (response.data.error === "Unable to geocode") {
+        const res = prompt(
+          "Are shipments delivered on oceans? (Yes/No)\nIf Yes, please tell us your name."
+        );
+  
+        if (res && res.toLowerCase() !== "no") {
+          alert(`Have some sense, ${res}! 😂`);
+        } else {
+          alert("Good! You know shipments can't be delivered in the ocean. 🏝️");
+        }
+        return;
+      }
       const placeName = response.data.display_name || "Unknown Location";
   
       const newPoint = { lat, lng, placeName };
-      setMapCenter([lat,lng]);
+      setMapCenter([lat, lng]);
   
       if (!currentLocation) {
         setCurrentLocation(newPoint);
@@ -124,6 +156,7 @@ const AddShipment = () => {
       console.error("Error fetching place name:", error);
     }
   };
+  
 
   const handleRemoveMarker = (index) => {
     const newRoute = route.filter((_, i) => i !== index);
@@ -135,7 +168,7 @@ const AddShipment = () => {
     setRoute([]);
     setCurrentLocation(null);
   };
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const decodedToken = jwtDecode(token);
 
   const userId = decodedToken.id;
@@ -153,12 +186,14 @@ const AddShipment = () => {
     };
     // console.log(shipmentData);
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/shipment/addShipment`,
-        shipmentData,{headers : {Authorization : token}}
-      );
+      // await axios.post(
+      //   `${import.meta.env.VITE_BACKEND_URL}/shipment/addShipment`,
+      //   shipmentData,
+      //   { headers: { Authorization: token } }
+      // );
+      console.log(shipmentData);
       alert("Shipment added successfully");
-      Navigate('/allShipments');
+      // Navigate("/allShipments");
     } catch (err) {
       console.error("Error adding shipment", err);
       setError(err.response.data.msg);
@@ -199,7 +234,7 @@ const AddShipment = () => {
               value={eta}
               onChange={(e) => setEta(e.target.value)}
               className="w-full p-2 md:p-3 rounded bg-gray-800 text-white"
-              min={new Date().toISOString().slice(0, 16)} 
+              min={new Date().toISOString().slice(0, 16)}
               required
             />
           </div>
@@ -233,7 +268,10 @@ const AddShipment = () => {
               zoom={5}
               className="h-full w-full rounded"
             >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <TileLayer
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+              />
               <UpdateMapCenter mapCenter={mapCenter} />
               <MapClickHandler onClick={handleMapClick} />
               {route.map((point, index) => (
@@ -252,7 +290,9 @@ const AddShipment = () => {
               )}
             </MapContainer>
           </div>
-          {error && <p className="text-red-500 text-lg items-center mb-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-lg items-center mb-2">{error}</p>
+          )}
           <button
             type="button"
             onClick={handleRemoveAllMarkers}

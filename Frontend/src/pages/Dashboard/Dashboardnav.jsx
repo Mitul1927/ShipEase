@@ -8,14 +8,14 @@ const DashboardNav = () => {
   return (
     <>
       <button 
-        className="md:hidden block h-10 top-4 left-4 z-50 text-white text-2xl p-2 m-4 bg-[#224870] rounded-lg"
+        className="md:hidden fixed h-10 top-18 right-80  z-50 text-white text-2xl p-2 m-4 bg-[#224870] rounded-lg"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <FaTimes /> : <FaBars />}
       </button>
 
       <div className={`fixed md:relative bg-[#224870] text-white min-h-screen rounded-2xl  transition-all duration-300 
-        ${isOpen ? "w-60 p-6" : "w-0 p-0"} md:w-1/4 md:p-6`}
+        ${isOpen ? "w-60 z-40 p-6" : "w-0 p-0"} md:w-1/4 md:p-6`}
       >
         <h2 onClick={()=>(setIsOpen(false))} className={`text-2xl font-bold text-center transition-all duration-300 ${isOpen ? "block" : "hidden"} md:block`}>
           Dashboard

@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Shipment = require('../models/Shipment');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
@@ -103,4 +104,22 @@ module.exports.logout = (req, res) => {
     res.clearCookie('role');
     res.clearCookie('image');
     res.json({ message: 'Logged out successfully' });
+}
+
+module.exports.myShipments = async(req,res)=>{
+    try {
+        const id = req.user.id;
+        // console.log(id);
+        const user = await User.findById(id);
+        const shipmentIds = user.shipments;
+        if (!shipmentIds || shipmentIds.length === 0) {
+            return res.status(404).json({ msg: "No shipments found." });
+        }
+        const shipments = await Shipment.find({ _id: { $in: shipmentIds } });
+
+        res.json(shipments); 
+    } catch (error) {
+        console.error("Error fetching user shipments:", error);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
 }

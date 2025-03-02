@@ -62,7 +62,7 @@ const Header = () => {
         {isAuthenticated ? (
           <>
           <Link onClick={()=>(setMenuOpen(false))} to="/addShipment" className="hover:text-[#44CFCB]">Add Shipment</Link>
-            <Link onClick={()=>(setMenuOpen(false))} to="/dashboard" className="hover:text-[#44CFCB]">Dashboard</Link>
+            <Link onClick={()=>(setMenuOpen(false))} to="/dashboard/userInfo" className="hover:text-[#44CFCB]">Dashboard</Link>
 
             <div className="flex hover:bg-[#4EA5D9] cursor-pointer items-center bg-[#2A4494] px-3 py-2 rounded-lg space-x-3 shadow-md">
               {image && <img src={image} alt="User" className="h-8 w-8 rounded-full border-2 border-[#4EA5D9]" />}

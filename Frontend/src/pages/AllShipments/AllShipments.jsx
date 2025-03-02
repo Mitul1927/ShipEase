@@ -39,7 +39,8 @@ const AllShipments = () => {
     .filter((shipment) =>
       shipment.containerId.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .sort((a, b) => (sortByEta ? new Date(a.eta) - new Date(b.eta) : 0));
+    .sort((a, b) => {if (!sortByEta) return 0; 
+      return new Date(a.eta) - new Date(b.eta);});
 
   return (
     <div className="min-h-screen bg-[#122C34] text-white p-6 md:p-10">

@@ -239,7 +239,7 @@ const AddShipment = () => {
             />
           </div>
           <div>
-            <label className="block mb-1 md:mb-2 font-semibold">
+            {/* <label className="block mb-1 md:mb-2 font-semibold">
               Shipment Status
             </label>
             <select
@@ -251,7 +251,7 @@ const AddShipment = () => {
               <option>In Transit</option>
               <option>Delivered</option>
               <option>Cancelled</option>
-            </select>
+            </select> */}
           </div>
 
           <SearchLocation

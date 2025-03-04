@@ -186,11 +186,11 @@ const AddShipment = () => {
     };
     // console.log(shipmentData);
     try {
-      // await axios.post(
-      //   `${import.meta.env.VITE_BACKEND_URL}/shipment/addShipment`,
-      //   shipmentData,
-      //   { headers: { Authorization: token } }
-      // );
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/shipment/addShipment`,
+        shipmentData,
+        { headers: { Authorization: token } }
+      );
       console.log(shipmentData);
       alert("Shipment added successfully");
       // Navigate("/allShipments");

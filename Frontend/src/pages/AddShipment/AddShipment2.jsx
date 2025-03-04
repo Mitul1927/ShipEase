@@ -48,7 +48,7 @@ const SearchLocation = ({
   const handleSelectLocation = (lat, lon) => {
     setMapCenter([lat, lon]);
     setSearchResults([]);
-    setSearchQuery("");
+    // setSearchQuery("");
   };
 
   return (

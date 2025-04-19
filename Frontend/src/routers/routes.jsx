@@ -9,6 +9,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import UserInfo from "../pages/Dashboard/userInfo/UserInfo";
 import AllShipments from "../pages/AllShipments/AllShipments";
 import MyShipments from "../pages/Dashboard/myShipments/MyShipments";
+import ResetPassword from "../resetPassword/reset";
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,9 @@ const router = createBrowserRouter([
     },{
         path : '/signup',
         element: <SignUp/>
+    },{
+        path : '/forgotpassword',
+        element : <ResetPassword/>
     }
 ]);
 

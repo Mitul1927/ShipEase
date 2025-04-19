@@ -1,0 +1,144 @@
+
+.reset-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #7D84B2;
+  }
+  
+
+  .reset-card {
+    background-color: #D9DBF1;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    text-align: center;
+    animation: fade-in 1s ease;
+  }
+  
+
+  .reset-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #7D84B2;
+    margin-bottom: 1.5rem;
+  }
+  
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #1F2A36;
+    color: #ddd;
+    font-size: 1rem;
+  }
+  
+  .input-field.error {
+    border-color: #f44336;
+  }
+  
+
+  .error-message {
+    color: #f44336;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  
+
+  .password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    color: #ddd;
+    cursor: pointer;
+  }
+.send_otp_btn{
+  background-color: #DBF4A7;
+  border-radius: 8px;
+  padding : 4px;
+  margin-top: 4px;
+  cursor: pointer;
+}
+  .reset-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #DBF4A7;
+    color: #7D84B2;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .reset-button:hover {
+    background-color: #b1c290;
+  }
+  
+
+  .google-login-container {
+    margin-top: 1rem;
+  }
+  
+  .google-login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #DBF4A7;
+    color: #7D84B2;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .google-login-btn:hover {
+    background-color: #343c52;
+  }
+  
+  .google-icon {
+    font-size: 1.5rem;
+  }
+
+  .redirect-links {
+    margin-top: 1.5rem;
+  }
+  
+  .redirect-text {
+    color: #7D84B2;
+    font-size: 0.875rem;
+  }
+  
+  .redirect-link {
+    color: #1E90FF;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .redirect-link:hover {
+    color: #3a8dff;
+  }
+  
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  

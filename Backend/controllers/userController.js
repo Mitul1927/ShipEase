@@ -123,3 +123,35 @@ module.exports.myShipments = async(req,res)=>{
         res.status(500).json({ msg: "Internal Server Error" });
     }
 }
+
+module.exports.reset = async (req,res)=> {
+    try {
+        const { email, password } = req.body;
+    
+        if (!email || !password) {
+          return res.status(400).json({ error: "Email and new password are required" });
+        }
+    
+        // Find user by email
+        const user = await User.findOne({ email });
+    
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
+    
+        // // Hash new password
+        // const salt = await bcrypt.genSalt(10);
+        // const hashedPassword = await bcrypt.hash(password, salt);
+    
+        // Update password in the database
+        // user.password = hashedPassword;
+        user.password = password;
+        await user.save();
+    
+        return res.status(200).json({ msg: "Password reset successfully" });
+    
+      } catch (e) {
+        console.error("Error in resetting password", e);
+        res.status(500).json({ error: "Error in resetting password", e });
+      }
+}
